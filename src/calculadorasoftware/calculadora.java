@@ -1,17 +1,8 @@
 package calculadorasoftware;
 
-import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.Font;
-import java.awt.GridLayout;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-
-import javax.swing.JButton;
-import javax.swing.JFrame;
-import javax.swing.JPanel;
-import javax.swing.JTextField;
-import javax.swing.WindowConstants;
+import java.awt.*;
+import java.awt.event.*;
+import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 
 public class calculadora extends JFrame {
@@ -19,8 +10,9 @@ public class calculadora extends JFrame {
     JTextField visual;
     double resultado;
     String operacion;
-    JPanel Num, panelOperaciones;
+    JPanel Num, panelOperaciones, funciones;
     boolean nuevaOperacion = true;
+    JButton Moneda, Conversion;
 
     public calculadora() {
         super();
@@ -28,6 +20,7 @@ public class calculadora extends JFrame {
         setTitle("Calculadora Simple");
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE); //definiendo la salida del programa
         setResizable(false);  //para dejar la pantalla fija
+        setLocationRelativeTo(null);
 
         //  panel
         JPanel panel = (JPanel) this.getContentPane();
@@ -44,20 +37,35 @@ public class calculadora extends JFrame {
         panel.add("North", visual);
 
         Num = new JPanel();
-        Num.setLayout(new GridLayout(4, 3));
-        Num.setBorder(new EmptyBorder(4, 4, 4, 4));
+        Num.setLayout(new GridLayout(4, 3)); //FILAS, COLUMNAS
+        Num.setBorder(new EmptyBorder(2, 2, 2, 2));
 
         for (int n = 9; n >= 0; n--) {
             nuevoBotonNumerico("" + n);
         }
 
         nuevoBotonNumerico(".");
-        nuevoBotonNumerico(";-;");
-
+        nuevoBotonNumerico("👁️");
         panel.add("Center", Num);
+        //boton para MONEDA calculadora
+        funciones = new JPanel();
+        Moneda = new JButton("Moneda");
+        Moneda.setForeground(Color.pink);
+        Moneda.setBackground(java.awt.Color.DARK_GRAY);
+        funciones.add(Moneda);
+
+        //Boton para CONVERSION
+        Conversion = new JButton("Conversion");
+        Conversion.setForeground(Color.pink);
+        Conversion.setBackground(java.awt.Color.DARK_GRAY);
+        funciones.setBorder(new EmptyBorder(1, 1, 1, 1));
+        funciones.add(Conversion);
+        funciones.setLayout(new GridLayout(2, 2));
+
+        panel.add("South", funciones);
 
         panelOperaciones = new JPanel(); //Creamos un nuevo objeto en el panel
-        panelOperaciones.setLayout(new GridLayout(6, 1));  //para el panel y ubicaion
+        panelOperaciones.setLayout(new GridLayout(6, 0));  //para el panel y ubicaion
         panelOperaciones.setBorder(new EmptyBorder(4, 4, 4, 4));  //para el bordel del panel
         //Nombraremos los botones de las operaciones
 
@@ -69,7 +77,7 @@ public class calculadora extends JFrame {
         nuevoBotonOperacion("CE");
 
         panel.add("East", panelOperaciones);
-
+        eventos();
         validate();
     }
 
@@ -144,9 +152,29 @@ public class calculadora extends JFrame {
         } else if (operacion.equals("*")) {
             resultado *= Double.parseDouble(visual.getText());
         }
+        //}else if (operacion.equals("CONVERSION")){
+        //  Integer.toBinaryString(Integer.parseInt(""+ visual.getText()+ resultado));
 
         visual.setText("" + resultado);
         operacion = "";
     }
 
+    private void eventos() {
+        Conversion.addMouseListener(new MouseAdapter() {
+
+            @Override
+            public void mouseReleased(MouseEvent evt) {
+                conversionNumeros num = new conversionNumeros();
+                num.setVisible(true);
+            }
+        });
+        Moneda.addMouseListener(new MouseAdapter() {
+
+            @Override
+            public void mouseReleased(MouseEvent evt) {
+                moneda mon = new moneda();
+                mon.setVisible(true);
+            }
+        });
+    }
 }
